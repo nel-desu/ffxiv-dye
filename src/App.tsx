@@ -8,7 +8,7 @@ type Color = {
   type: string
 }
 
-const TURN = 5
+const TURN = 20
 
 function App() {
 
