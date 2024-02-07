@@ -38,7 +38,7 @@ function App() {
   function changeColor() {
     setTurn(turn - 1)
 
-    const sel = colors[random(0, colors.length)]
+    const sel = colors[random(0, colors.length - 1)]
     setAnswer(sel)
     console.log(sel.name)
     const sameType = colors.filter((v) => v.type === sel.type && v.color !== sel.color)
