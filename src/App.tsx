@@ -28,9 +28,13 @@ function App() {
   // 当前选项
   const [selections, setSelections] = useState<Color[]>([])
 
+  // 弹窗控制
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalColor, setModalColor] = useState(colors[0])
 
+  /**
+   * 游戏开始
+   */
   function gameStart() {
     setScore(0)
     setStart(true)
@@ -42,6 +46,9 @@ function App() {
     changeColor()
   }
 
+  /**
+   * 点击选项后更换当前颜色
+   */
   function changeColor() {
     setTurn(turn + 1)
 
@@ -69,6 +76,10 @@ function App() {
     setSelections(fourSel)
   }
 
+  /**
+   * 点击选项
+   * @param color 当前选项对应的染剂 
+   */
   function onSelect(color: Color) {
     if (color.name === answer.name) {
       setScore(score + 1)
@@ -81,27 +92,34 @@ function App() {
     }
   }
 
+  /**
+   * 游戏结束
+   */
   function gameover() {
     setTurn(0)
     setPlayed(true)
     setStart(false)
   }
 
-
-  const showModal = (color: Color) => {
+  /**
+   * 弹窗显示颜色信息
+   */
+  function showModal(color: Color) {
     setModalColor(color)
-    setIsModalOpen(true);
-  };
-
+    setIsModalOpen(true)
+  }
 
   function random(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1))
   }
 
+  /**
+   * 打乱数组
+   */
   function shuffleArray(array: Color[]) {
     for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+      const j = Math.floor(Math.random() * (i + 1))
+      [array[i], array[j]] = [array[j], array[i]]
     }
   }
 
