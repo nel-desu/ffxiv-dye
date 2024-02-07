@@ -1,30 +1,27 @@
-# React + TypeScript + Vite
+# 这是什么染剂
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个根据颜色猜染剂名称的小游戏，染剂是最终幻想 XIV 中的染色道具
 
-Currently, two official plugins are available:
+地址：https://nel-desu.github.io/ffxiv-dye/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> 其中染剂名称及色值数据来自[最终幻想 XIV 中文维基 - 染剂](https://ff14.huijiwiki.com/wiki/染剂)
 
-## Expanding the ESLint configuration
+> 项目是 React + TypeScript + Vite，还使用了 antd 的组件
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 截图
 
-- Configure the top-level `parserOptions` property like this:
+### 开始
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+![开始](./public/1.png)
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### 选项
+
+![选项](./public/2.png)
+
+### 结束
+
+![计分](./public/3.png)
+
+### 查看颜色
+
+![查看颜色](./public/4.png)
