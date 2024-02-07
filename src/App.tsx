@@ -1,67 +1,76 @@
 import { useState } from 'react'
 import colorData from './assets/colors.json'
 import './App.css'
+import { Color } from './Color'
+import { Answers } from './Answers'
 
-type Color = {
-  color: string
-  name: string
-  type: string
-}
-
+// 总次数
 const TURN = 20
+// 保存全部答案
+const allAnswers = new Answers()
 
 function App() {
-
-  // 所有染剂
+  // 所有染剂数据
   const [colors] = useState(colorData as Array<Color>)
-  // 是否已进行一轮
-  const [played, setPlayed] = useState(false)
 
   // 得分
   const [score, setScore] = useState(0)
-  // 当前剩余轮数
-  const [turn, setTurn] = useState(TURN)
-  // 是否开始
+  // 当前剩余次数
+  const [turn, setTurn] = useState(0)
+  // 完成一次标记
+  const [played, setPlayed] = useState(false)
+  // 开始游戏标记
   const [start, setStart] = useState(false)
 
-  // 答案
-  const [answer, setAnswer] = useState(colors[0])
-  // 选项
-  const [selection, setSelection] = useState<Color[]>([])
+  // 当前答案
+  const [answer, setAnswer] = useState<Color>(colors[0])
+  // 当前选项
+  const [selections, setSelections] = useState<Color[]>([])
 
   function gameStart() {
     setScore(0)
     setStart(true)
+
+    // 生成一批颜色，数量为 TURN
+    const copyColors = [...colors]
+    shuffleArray(copyColors)
+    allAnswers.put(copyColors.slice(0, TURN))
     changeColor()
   }
 
   function changeColor() {
-    setTurn(turn - 1)
+    setTurn(turn + 1)
 
-    const sel = colors[random(0, colors.length - 1)]
+    // 获取当前答案
+    const sel = allAnswers.next()
     setAnswer(sel)
     console.log(sel.name)
+
+    // 找到类似的颜色并打乱
     const sameType = colors.filter((v) => v.type === sel.type && v.color !== sel.color)
     shuffleArray(sameType)
 
-    const items = new Array<Color>
+    // 得到四个选项
+    const fourSel = new Array<Color>
     for (let i = 0; i < 3; i++) {
       const item = sameType.pop()
       if (item) {
-        items.push(item)
+        fourSel.push(item)
       }
     }
-    items.push(sel)
-    shuffleArray(items)
-    setSelection(items)
+    fourSel.push(sel)
+
+    // 再打乱选项
+    shuffleArray(fourSel)
+    setSelections(fourSel)
   }
 
-  function onSelectColor(color: Color) {
+  function onSelect(color: Color) {
     if (color.name === answer.name) {
       setScore(score + 1)
     }
 
-    if (turn > 0) {
+    if (turn < TURN) {
       changeColor()
     } else {
       gameover()
@@ -69,7 +78,7 @@ function App() {
   }
 
   function gameover() {
-    setTurn(TURN)
+    setTurn(0)
     setPlayed(true)
     setStart(false)
   }
@@ -121,15 +130,15 @@ function App() {
 
       <div style={start ? { display: 'block' } : { display: 'none' }}>
         <h2>这是什么染剂</h2>
-        <h3>剩余次数：{turn} / 得分：{score}</h3>
+        <h3>剩余次数：{TURN - turn} / 得分：{score}</h3>
         <div className='color-container'>
           <div className='color-box' style={{ background: (answer.color) }}></div>
         </div>
-        <p style={{color: (answer.color)}}>{answer.color}</p>
+        <p style={{ color: (answer.color) }}>{answer.color}</p>
 
         <div className="card">
-          {selection.map((v) => (
-            <button onClick={() => onSelectColor(v)}>
+          {selections.map((v) => (
+            <button onClick={() => onSelect(v)}>
               {v.name}
             </button>
           ))}
