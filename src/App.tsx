@@ -127,7 +127,7 @@ function App() {
         <h4>根据颜色选择染剂名称</h4>
         {played ?
           <div>
-            <h4>总计得分：{score}</h4>
+            <h4>总分：{score}</h4>
             <div className='color-cell-container'>
               {allAnswers.colors.map((v) => (
                 <span onClick={() => showModal(v)} className='color-cell' style={{ background: (v.color) }} />
@@ -143,8 +143,8 @@ function App() {
         </div>
         <p className="read-the-docs">
           染剂色值来自
-          <a href="https://ff14.huijiwiki.com/wiki/%E6%9F%93%E5%89%82" target="_blank" rel="noopener noreferrer">
-            最终幻想 XIV 中文维基
+          <a href="https://ff14.huijiwiki.com/wiki/%E6%9F%93%E5%89%82"  target="_blank" rel="noopener noreferrer">
+            最终幻想 XIV 中文维基 - 染剂
           </a>
         </p>
       </div>
