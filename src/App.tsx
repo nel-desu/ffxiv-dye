@@ -3,6 +3,7 @@ import colorData from './assets/colors.json'
 import './App.css'
 import { Color } from './Color'
 import { Answers } from './Answers'
+import { Modal } from 'antd'
 
 // 总次数
 const TURN = 20
@@ -26,6 +27,9 @@ function App() {
   const [answer, setAnswer] = useState<Color>(colors[0])
   // 当前选项
   const [selections, setSelections] = useState<Color[]>([])
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalColor, setModalColor] = useState(colors[0])
 
   function gameStart() {
     setScore(0)
@@ -83,6 +87,13 @@ function App() {
     setStart(false)
   }
 
+
+  const showModal = (color: Color) => {
+    setModalColor(color)
+    setIsModalOpen(true);
+  };
+
+
   function random(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1))
   }
@@ -114,7 +125,17 @@ function App() {
       <div style={start ? { display: 'none' } : { display: 'block' }}>
         <h1>这是什么染剂</h1>
         <h4>根据颜色选择染剂名称</h4>
-        {played ? <h4>总计得分：{score}</h4> : <></>}
+        {played ?
+          <div>
+            <h4>总计得分：{score}</h4>
+            <div className='color-cell-container'>
+              {allAnswers.colors.map((v) => (
+                <span onClick={() => showModal(v)} className='color-cell' style={{ background: (v.color) }} />
+              ))}
+            </div>
+          </div> :
+          <></>
+        }
         <div className="card">
           <button onClick={() => gameStart()}>
             {played ? '重新开始' : '开始'}
@@ -144,6 +165,17 @@ function App() {
           ))}
         </div>
       </div>
+
+      <Modal title={modalColor.name} open={isModalOpen} onCancel={() => setIsModalOpen(false)}
+        footer={() => (<></>)}>
+        <div style={{ textAlign: 'center' }}>
+          <div className='color-container'>
+            <div className='color-box' style={{ background: (modalColor.color) }}></div>
+          </div>
+          <p>{modalColor.name}</p>
+          <p>{modalColor.color}</p>
+        </div>
+      </Modal>
     </>
   )
 }
