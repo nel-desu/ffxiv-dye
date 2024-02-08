@@ -13,6 +13,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.checkbox {
+  color: rgba(255, 255, 255, 0.87);
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -78,5 +82,9 @@ button:focus-visible {
 
   button {
     background-color: #f9f9f9;
+  }
+
+  .checkbox {
+    color: #213547;
   }
 }
