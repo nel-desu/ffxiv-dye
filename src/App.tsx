@@ -27,6 +27,8 @@ function App() {
   const [answer, setAnswer] = useState<Color>(colors[0])
   // 当前选项
   const [selections, setSelections] = useState<Color[]>([])
+  // 分数评价
+  const [comment, setComment] = useState('')
 
   // 弹窗控制
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -99,6 +101,59 @@ function App() {
     setTurn(0)
     setPlayed(true)
     setStart(false)
+    getComment()
+  }
+
+  /**
+   * 根据得分显示评价
+   */
+  function getComment() {
+    let com = '这是怎么回事？给你"亚拉戈西瓜"级好了？'
+
+    switch (score) {
+      case 0:
+        com = '是、是零？天才！给你"莫莫拉·莫拉！！！"级。'
+        break
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        com = '分数有些低，是"小松鼠"级……不如再试一次？'
+        break
+      case 5:
+      case 6:
+        com = '稍加努力就能够达到的分数，是"灰尘兔"级。'
+        break
+      case 7:
+      case 8:
+        com = '稍加努力就能够达到的分数，是"青鸟"级。'
+        break
+      case 9:
+      case 10:
+        com = '不错的分数，你对染剂已经有一些了解，是"小脚雪人"级。'
+        break
+      case 11:
+      case 12:
+        com = '不错的分数，你对染剂已经比较熟悉，是"长须小黑豹"级。'
+        break
+      case 13:
+      case 14:
+      case 15:
+        com = '是"叶小妖妖"级，你对染剂相当熟悉，经常关照染剂商人的生意。'
+        break
+      case 16:
+      case 17:
+        com = '是"旅雀儿"级。你对染剂相非常熟悉，天天见面的朋友里一定有投影台。'
+        break
+      case 18:
+      case 19:
+        com = '居然达到了"椒盐海豹"级！你的背包里应该塞满了染剂和幻象棱镜吧！'
+        break
+      case 20:
+        com = '好、好厉害，是满分！你用过的染剂已经可以堆满海都广场了吧！给你"纳夏猫"级。'
+        break
+    }
+    setComment(com)
   }
 
   /**
@@ -142,10 +197,11 @@ function App() {
     <>
       <div style={start ? { display: 'none' } : { display: 'block' }}>
         <h1>这是什么染剂</h1>
-        <h4>根据颜色选择染剂名称</h4>
+        <h3>根据颜色选择染剂名称</h3>
         {played ?
-          <div>
-            <h4>总分：{score}</h4>
+          <div style={{ textAlign: 'center' }}>
+            <p>总分：{score}</p>
+            <p>{comment}</p>
             <div className='color-cell-container'>
               {allAnswers.colors.map((v) => (
                 <span onClick={() => showModal(v)} className='color-cell' style={{ background: (v.color) }} />
@@ -161,7 +217,7 @@ function App() {
         </div>
         <p className="read-the-docs">
           染剂色值来自
-          <a href="https://ff14.huijiwiki.com/wiki/%E6%9F%93%E5%89%82"  target="_blank" rel="noopener noreferrer">
+          <a href="https://ff14.huijiwiki.com/wiki/%E6%9F%93%E5%89%82" target="_blank" rel="noopener noreferrer">
             最终幻想 XIV 中文维基 - 染剂
           </a>
         </p>
