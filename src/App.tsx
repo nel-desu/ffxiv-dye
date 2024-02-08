@@ -220,8 +220,7 @@ function App() {
             {played ? '重新开始' : '开始'}
           </button>
         </div>
-        <Checkbox onChange={(e) => changeTheEcho(e.target.checked)}>超越之力</Checkbox>
-
+        <Checkbox disabled={played ? false : true} onChange={(e) => changeTheEcho(e.target.checked)}>超越之力</Checkbox>
         <p className="read-the-docs">
           染剂色值来自
           <a href="https://ff14.huijiwiki.com/wiki/%E6%9F%93%E5%89%82" target="_blank" rel="noopener noreferrer">
