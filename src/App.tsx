@@ -1,9 +1,10 @@
 import { useState } from 'react'
+import { Color } from './type/Color'
+import { Answers } from './Answers'
+import { Checkbox, Modal } from 'antd'
+import { Option } from './Option'
 import colorData from './assets/colors.json'
 import './App.css'
-import { Color } from './Color'
-import { Answers } from './Answers'
-import { Modal } from 'antd'
 
 // 总次数
 const TURN = 20
@@ -14,6 +15,8 @@ function App() {
   // 所有染剂数据
   const [colors] = useState(colorData as Array<Color>)
 
+  // 超越之力
+  const [theEcho, changeTheEcho] = useState(false)
   // 得分
   const [score, setScore] = useState(0)
   // 当前剩余次数
@@ -26,7 +29,7 @@ function App() {
   // 当前答案
   const [answer, setAnswer] = useState<Color>(colors[0])
   // 当前选项
-  const [selections, setSelections] = useState<Color[]>([])
+  const [options, setOptions] = useState<Option[]>([])
   // 分数评价
   const [comment, setComment] = useState('')
 
@@ -64,26 +67,28 @@ function App() {
     shuffleArray(sameType)
 
     // 得到四个选项
-    const fourSel = new Array<Color>
+    const fourSel = new Array<Option>
     for (let i = 0; i < 3; i++) {
       const item = sameType.pop()
       if (item) {
-        fourSel.push(item)
+        fourSel.push(new Option(item, false, theEcho))
       }
     }
-    fourSel.push(sel)
+    fourSel.push(new Option(sel, true, theEcho))
 
     // 再打乱选项
     shuffleArray(fourSel)
-    setSelections(fourSel)
+    setOptions(fourSel)
   }
 
   /**
    * 点击选项
    * @param color 当前选项对应的染剂 
    */
-  function onSelect(color: Color) {
-    if (color.name === answer.name) {
+  function onSelect(option: Option) {
+    let gameoverScore = score;
+    if (option.color.name === answer.name) {
+      gameoverScore++;
       setScore(score + 1)
     }
 
@@ -91,6 +96,7 @@ function App() {
       changeColor()
     } else {
       gameover()
+      getComment(gameoverScore)
     }
   }
 
@@ -101,16 +107,15 @@ function App() {
     setTurn(0)
     setPlayed(true)
     setStart(false)
-    getComment()
   }
 
   /**
    * 根据得分显示评价
    */
-  function getComment() {
+  function getComment(gameoverScore: number) {
     let com = '这是怎么回事？给你"亚拉戈西瓜"级好了？'
 
-    switch (score) {
+    switch (gameoverScore) {
       case 0:
         com = '是、是零？天才！给你"莫莫拉·莫拉！！！"级。'
         break
@@ -147,10 +152,10 @@ function App() {
         break
       case 18:
       case 19:
-        com = '居然达到了"椒盐海豹"级，你的背包里应该塞满了染剂和幻象棱镜吧！'
+        com = '居然达到了"椒盐海豹"级，你的背包里应该塞满了染剂和幻象棱镜！'
         break
       case 20:
-        com = '好、好厉害，是满分！你用过的染剂已经可以堆满海都广场了吧！给你"纳夏猫"级。'
+        com = '好、好厉害，是满分！给你"纳夏猫"级，你用过的染剂已经可以堆满海都广场了吧！'
         break
     }
     setComment(com)
@@ -171,7 +176,7 @@ function App() {
   /**
    * 打乱数组
    */
-  function shuffleArray(array: Color[]) {
+  function shuffleArray<T>(array: T[]) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -210,11 +215,13 @@ function App() {
           </div> :
           <></>
         }
-        <div className="card">
+        <div>
           <button onClick={() => gameStart()}>
             {played ? '重新开始' : '开始'}
           </button>
         </div>
+        <Checkbox onChange={(e) => changeTheEcho(e.target.checked)}>超越之力</Checkbox>
+
         <p className="read-the-docs">
           染剂色值来自
           <a href="https://ff14.huijiwiki.com/wiki/%E6%9F%93%E5%89%82" target="_blank" rel="noopener noreferrer">
@@ -227,14 +234,14 @@ function App() {
         <h2>这是什么染剂</h2>
         <h3>剩余次数：{TURN - turn} / 得分：{score}</h3>
         <div className='color-container'>
-          <div className='color-box' style={{ background: (answer.color) }}></div>
+          <div className='color-box' style={{ background: answer.color }}></div>
         </div>
         <p style={{ color: (answer.color) }}>{answer.color}</p>
 
         <div className="card">
-          {selections.map((v) => (
-            <button onClick={() => onSelect(v)}>
-              {v.name}
+          {options.map((v) => (
+            <button style={{ fontWeight: v.mark ? v.correctAnswer ? 'bold' : 'normal' : 'normal' }} onClick={() => onSelect(v)}>
+              {v.color.name}{v.mark ? v.correctAnswer ? ' √' : '' : ''}
             </button>
           ))}
         </div>
@@ -244,7 +251,7 @@ function App() {
         footer={() => (<></>)}>
         <div style={{ textAlign: 'center' }}>
           <div className='color-container'>
-            <div className='color-box' style={{ background: (modalColor.color) }}></div>
+            <div className='color-box' style={{ background: modalColor.color }}></div>
           </div>
           <p>{modalColor.name}</p>
           <p>{modalColor.color}</p>
